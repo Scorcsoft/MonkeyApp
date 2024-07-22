@@ -15,8 +15,9 @@ if sys.platform != 'darwin':
 
 
 CONFIG = {
-    'start_time': '08:20',  # 上班时间
-    'end_time': '16:30',  # 下班时间
+    'start_time': '08:20',  # 你的上班时间
+    'end_time': '16:30',  # 你的下班时间
+    'wage': 1000,  # 你的日薪，不为0时可以实时显示当天已摸多少元子
     'percent': True,  # 是否显示已摸鱼时间百分比
 }
 
@@ -75,6 +76,8 @@ class MonkeyApp(rumps.App):
         try:
             CONFIG['start_time_stamp'] = dateToStamp(time.strftime(f'%Y-%m-%d {CONFIG["start_time"]}:00'))
             CONFIG['end_time_stamp'] = dateToStamp(time.strftime(f'%Y-%m-%d {CONFIG["end_time"]}:00'))
+            if CONFIG['start_time_stamp'] > CONFIG['end_time_stamp']:  # 增加夜班支持
+                CONFIG['end_time_stamp'] += 86400
         except:
             print('上下班时间不正确，请修改')
             sys.exit(0)
@@ -87,6 +90,12 @@ class MonkeyApp(rumps.App):
         title = countdown()
         if CONFIG['percent']:
             title += f' | {calcPercent()}'
+
+        if isinstance(CONFIG['wage'], int) and CONFIG['wage'] > 0:
+            wage = CONFIG['wage'] / (CONFIG['end_time_stamp'] - CONFIG['start_time_stamp']) * (
+                        time.time() - CONFIG['start_time_stamp'])
+            title += ' | ￥ %.2f' % round(wage, 2)
+
         self.title = title
 
 
