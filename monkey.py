@@ -17,7 +17,7 @@ if sys.platform != 'darwin':
 CONFIG = {
     'start_time': '08:20',  # 你的上班时间
     'end_time': '16:30',  # 你的下班时间
-    'wage': 1000,  # 你的日薪，不为0时可以实时显示当天已摸多少元子
+    'wage': 5000,  # 你的日薪，不为0时可以实时显示当天已摸多少元子
     'percent': True,  # 是否显示已摸鱼时间百分比
 }
 
@@ -92,9 +92,12 @@ class MonkeyApp(rumps.App):
             title += f' | {calcPercent()}'
 
         if isinstance(CONFIG['wage'], int) and CONFIG['wage'] > 0:
-            wage = CONFIG['wage'] / (CONFIG['end_time_stamp'] - CONFIG['start_time_stamp']) * (
-                        time.time() - CONFIG['start_time_stamp'])
-            title += ' | ￥ %.2f' % round(wage, 2)
+            if time.time() > CONFIG["end_time_stamp"]:  # 当前时间大于下班时间，直接显示为100%
+                title += ' | %.2f' % round(float(CONFIG['wage']), 2)
+            else:
+                wage = CONFIG['wage'] / (CONFIG['end_time_stamp'] - CONFIG['start_time_stamp']) * (
+                            time.time() - CONFIG['start_time_stamp'])
+                title += ' | %.2f' % round(wage, 2)
 
         self.title = title
 
