@@ -1,11 +1,13 @@
 import sys
 import time
 from datetime import datetime
+
 try:
     import rumps
+    from pync import Notifier
 except ModuleNotFoundError:
-    print('run command to install rumps: ')
-    print('pip3 install rumps')
+    print('run command to install rumps and pync: ')
+    print('pip3 install rumps pync')
     sys.exit(0)
 
 
@@ -15,9 +17,9 @@ if sys.platform != 'darwin':
 
 
 CONFIG = {
-    'start_time': '08:20',  # 你的上班时间
-    'end_time': '16:30',  # 你的下班时间
-    'wage': 5000,  # 你的日薪，不为0时可以实时显示当天已摸多少元子
+    'start_time': '09:20',  # 你的上班时间
+    'end_time': '11:14',  # 你的下班时间
+    'wage': 1200,  # 你的日薪，不为0时可以实时显示当天已摸多少元子
     'percent': True,  # 是否显示已摸鱼时间百分比
 }
 
@@ -86,6 +88,8 @@ class MonkeyApp(rumps.App):
         self.title = ''
         rumps.Timer(self.update, 1).start()
 
+        self.end_time_alerted = False
+
     def update(self, sender):
         title = countdown()
         if CONFIG['percent']:
@@ -100,7 +104,13 @@ class MonkeyApp(rumps.App):
                 title += ' | %.2f' % round(wage, 2)
 
         self.title = title
+        self.check_end_time()
 
+    def check_end_time(self):
+        current_time = time.time()
+        if current_time >= CONFIG['end_time_stamp'] and not self.end_time_alerted:
+            self.end_time_alerted = True
+            Notifier.notify("下班时间到了！请及时休息。", title="下班提醒")
 
 monkeyASCII = r'''
             __,__
