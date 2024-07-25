@@ -1,22 +1,8 @@
-import sys
 import time
-import threading
 import ScorcsoftCore.config as config
 import ScorcsoftCore.settings as settings
 import ScorcsoftCore.ScorcsoftUtils as scorcsoftUtils
-try:
-    import rumps
-except ModuleNotFoundError:
-    print('run command to install rumps: ')
-    print('pip3 install rumps')
-    sys.exit(0)
-
-try:
-    import PyQt5
-except ModuleNotFoundError:
-    print('run command to install rumps: ')
-    print('pip3 install rumps')
-    sys.exit(0)
+import rumps
 
 
 class MonkeyApp(rumps.App):
