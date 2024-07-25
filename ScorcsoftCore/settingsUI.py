@@ -1,10 +1,7 @@
 import json
-import time
-import rumps
 from ScorcsoftCore import config
 from PyQt5.QtCore import QTime
 from PyQt5 import QtCore, QtGui, QtWidgets
-import ScorcsoftCore.ScorcsoftUtils as scorcsoftUtils
 
 
 class Ui_MainWindow(object):

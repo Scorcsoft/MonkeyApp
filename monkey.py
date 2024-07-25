@@ -1,6 +1,13 @@
 import os
 import sys
 import json
+try:
+    import rumps
+    import PyQt5
+except ModuleNotFoundError:
+    print('run command to install rumps and PyQt5: ')
+    print('pip3 install rumps PyQt5')
+    sys.exit(0)
 import ScorcsoftCore.config as config
 
 
