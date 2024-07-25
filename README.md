@@ -47,7 +47,7 @@ python3 monkey.py &
 
 <img src="img/0.gif" width="500">
 
-## 自动退出问题
+## 自动退出问题 <a href="https://github.com/garfield-ts">@garfield-ts</a>
 如果你使用Mac自带的终端，或你的终端设置为关闭当前会话后关闭进程，则需要使用nohup来运行。
 
 ```bash
