@@ -11,61 +11,62 @@ def dateToStamp(date_string):
     return timestamp
 
 
-def calcInterval(start_date, end_date):
-    date_format = '%Y-%m-%d %H:%M:%S'
-    start = datetime.strptime(start_date, date_format)
-    end = datetime.strptime(end_date, date_format)
-    delta = end - start
-    days = delta.days
-    seconds = delta.seconds
-    minutes = seconds // 60
-    hours = minutes // 60
-    minutes %= 60
-    seconds %= 60
-
-    result = config.Settings['countdown_note']
-    if days > 0:
-        result += f'{days}:'
-    result += '%02d:%02d:%02d' % (hours, minutes, seconds)
-
-    return result
-
-
 def saveSetting():
     try:
-        fp = open('./ScorcsoftCore/config.json', 'w')
+        fp = open('config.json', 'w')
         fp.write(json.dumps(config.Settings))
         fp.close()
     except:
         pass
 
 
-def countdown():
-    if 'end_time' not in config.Settings.keys():
-        return config.errors['no time setup']
+def countdown(startTimeStamp, endTimeStamp, now):
+    if startTimeStamp < now < endTimeStamp:
+        now = time.strftime('%Y-%m-%d %H:%M:%S')
+        end = time.strftime(f'%Y-%m-%d {config.Settings["end_time"]}:00')
+        date_format = '%Y-%m-%d %H:%M:%S'
+        start = datetime.strptime(now, date_format)
+        end = datetime.strptime(end, date_format)
+        delta = end - start
+        days = delta.days
+        seconds = delta.seconds
+        minutes = seconds // 60
+        hours = minutes // 60
+        minutes %= 60
+        seconds %= 60
 
-    now = time.strftime('%Y-%m-%d %H:%M:%S')
-    end = time.strftime(f'%Y-%m-%d {config.Settings["end_time"]}:00')
+        result = config.Settings['countdown_note']
+        if days > 0:
+            result += f'{days}:'
+        result += '%02d:%02d:%02d' % (hours, minutes, seconds)
+        return result
 
-    if time.time() > config.Settings["end_time_stamp"]:
-        if time.time() >= config.Settings['start_time_stamp']:  # 已经到第二天上班时间，重置计时器
-            config.Settings['start_time_stamp'] = dateToStamp(time.strftime(f'%Y-%m-%d {config.Settings["start_time"]}:00'))
-            config.Settings['end_time_stamp'] = dateToStamp(time.strftime(f'%Y-%m-%d {config.Settings["end_time"]}:00'))
-            if config.Settings['start_time_stamp'] > config.Settings['end_time_stamp']:
-                config.Settings['end_time_stamp'] += 86400
+    return f'{config.Settings["countdown_note"]}00:00:00'
+
+
+def calcPercent(startTimeStamp, endTimeStamp, now):
+    if now > endTimeStamp:  # 当前时间大于下班时间，直接显示为100%
+        return ' | 100%'
+
+    if now < startTimeStamp:  # 当前时间小于上班时间，直接显示为0%
+        return ' | 0%'
+
+    totalSeconds = int(endTimeStamp - startTimeStamp)
+    p = (time.time() - startTimeStamp) / totalSeconds * 100
+    return f' | {config.Settings["percent_note"]}%.2f%%' % round(p, 2)
+
+
+def calcWage(startTimeStamp, endTimeStamp, now, wage):
+    if isinstance(wage, int) and wage > 0:
+        title = f' | {config.Settings["wage_note"]}{config.Settings["wage_symbol"]}'
+        if now > endTimeStamp:  # 当前时间大于下班时间，直接显示为100%
+            title += f'%.2f' % round(float(config.Settings['wage']), 2)
+        elif now < startTimeStamp:
+            title += '0.00'
         else:
-            return '00:00:00'
+            nowWage = wage / (endTimeStamp - startTimeStamp) * (now - startTimeStamp)
 
-    return calcInterval(now, end)
-
-
-def calcPercent():
-    if time.time() > config.Settings["end_time_stamp"]:  # 当前时间大于下班时间，直接显示为100%
-        return '100%'
-
-    if time.time() < config.Settings["start_time_stamp"]:  # 当前时间小于上班时间，直接显示为0%
-        return '0%'
-
-    totalSeconds = int(config.Settings["end_time_stamp"] - config.Settings["start_time_stamp"])
-    string = (time.time() - config.Settings["start_time_stamp"]) / totalSeconds * 100
-    return '%.2f%%' % round(string, 2)
+            title += '%.2f' % round(nowWage, 2)
+        return title
+    else:
+        return '错误的日薪设置'

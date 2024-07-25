@@ -214,6 +214,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+
         self.retranslateUi(MainWindow)
         self.buttonBox.rejected.connect(MainWindow.close)
         self.buttonBox.accepted.connect(self.saveSetting)
@@ -281,9 +282,7 @@ class Ui_MainWindow(object):
         # 倒计时功能
         countdownNote = self.input_countdown_note.text()
         startTime = self.timeEdit_start_time.text()
-        startTimeStamp = scorcsoftUtils.dateToStamp(time.strftime(f'%Y-%m-%d {startTime}:00'))
         endTime = self.timeEdit_end_time.text()
-        endTimeStamp = scorcsoftUtils.dateToStamp(time.strftime(f'%Y-%m-%d {endTime}:00'))
 
         # 百分比功能
         percentNote = self.input_percent_note.text()
@@ -296,19 +295,12 @@ class Ui_MainWindow(object):
         try:
             wage = int(self.input_wage.text())
         except:
-            rumps.alert('日薪需要设置为大于0的整数，请重试')
-            return
-
-        if wage <= 0:
-            rumps.alert('日薪需要设置为大于0的整数，请重试')
-            return
+            wage = 0
 
         config.Settings = {
             'countdown_note': countdownNote,
             'start_time': startTime,
-            'start_time_stamp': startTimeStamp,
             'end_time': endTime,
-            'end_time_stamp': endTimeStamp,
             'percent_note': percentNote,
             'percent_display': percentDisplay,
             'wage_note': wageNote,
@@ -317,7 +309,7 @@ class Ui_MainWindow(object):
             'wage_display': wageDisplay
         }
         try:
-            fp = open('./ScorcsoftCore/config.json', 'w')
+            fp = open('config.json', 'w')
             fp.write(json.dumps(config.Settings))
             fp.close()
         except:
