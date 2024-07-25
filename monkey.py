@@ -4,10 +4,14 @@ import json
 try:
     import rumps
     import PyQt5
-except ModuleNotFoundError:
-    print('run command to install rumps and PyQt5: ')
-    print('pip3 install rumps PyQt5')
+except ModuleNotFoundError as e:
+    print('run command to install module: ')
+    if e.name == 'rumps':
+        print('pip3 install rumps rumps')
+    elif e.name == 'PyQt5':
+        print('pip3 install rumps PyQt5')
     sys.exit(0)
+
 import ScorcsoftCore.config as config
 
 
