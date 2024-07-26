@@ -15,6 +15,7 @@ class MonkeyApp(rumps.App):
             rumps.MenuItem(title='显示日薪', callback=self.wageSwitch)
         ]
 
+        self.update_status()
         rumps.Timer(self.update, 1).start()
 
     def percentSwitch(self, sender):
@@ -61,5 +62,9 @@ class MonkeyApp(rumps.App):
             title += scorcsoftUtils.calcWage(startTimeStamp, endTimeStamp, now, config.Settings['wage'])
 
         self.title = title
+        self.update_status()
 
-
+    def update_status(self):
+        items = self.menu.items()
+        items[0][1].state = not (config.Settings['percent_display'] == 1)
+        items[1][1].state = not (config.Settings['wage_display'] == 1)
