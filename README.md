@@ -1,6 +1,19 @@
 # MonkeyApp
 Monkey App - 在Mac状态栏显示蓝队吗喽们的下班倒计时
 
+
+## update
+
+### 20240730
+修复Issue # 7：
+```angular2html
+WARNING: Secure coding is automatically enabled for restorable state! However, not on all supported macOS versions of this application. Opt-in to secure coding explicitly by implementing NSApplicationDelegate.applicationSupportsSecureRestorableState:.
+```
+
+## 反馈
+如果你有想要的新功能或Bug反馈，请提Issue或联系：
+<img src="img/8.jpg" width="500">
+
 <img src="img/0.jpg" width="500">
 <img src="img/3.jpg" width="500">
 
