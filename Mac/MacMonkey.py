@@ -1,9 +1,14 @@
 import time
+import rumps
 import ScorcsoftCore.config as config
 import ScorcsoftCore.settings as settings
 import ScorcsoftCore.ScorcsoftUtils as scorcsoftUtils
-import rumps
 
+
+class NSApplicationDelegate:
+    def applicationSupportsSecureRestorableState(self, app):
+        print(app)
+        return True
 
 class MonkeyApp(rumps.App):
     def __init__(self):

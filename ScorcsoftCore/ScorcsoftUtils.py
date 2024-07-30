@@ -69,4 +69,4 @@ def calcWage(startTimeStamp, endTimeStamp, now, wage):
             title += '%.2f' % round(nowWage, 2)
         return title
     else:
-        return '错误的日薪设置'
+        return ' | 日薪不正确'
