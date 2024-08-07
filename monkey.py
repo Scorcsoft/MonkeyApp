@@ -26,6 +26,24 @@ if os.path.isfile('config.json'):
         fp = open('config.json', 'r')
         config.Settings = json.loads(fp.read())
         fp.close()
+        if 'countdown_note' not in config.Settings.keys():
+            config.Settings['countdown_note'] = ''
+        if 'start_time' not in config.Settings.keys():
+            config.Settings['start_time'] = '09:00'
+        if 'end_time' not in config.Settings.keys():
+            config.Settings['end_time'] = '17:00'
+        if 'percent_note' not in config.Settings.keys():
+            config.Settings['percent_note'] = ''
+        if 'percent_display' not in config.Settings.keys():
+            config.Settings['percent_display'] = 1
+        if 'wage_note' not in config.Settings.keys():
+            config.Settings['wage_note'] = ''
+        if 'wage_symbol' not in config.Settings.keys():
+            config.Settings['wage_symbol'] = ''
+        if 'wage' not in config.Settings.keys():
+            config.Settings['wage'] = 0
+        if 'wage_display' not in config.Settings.keys():
+            config.Settings['wage_display'] = 1
     except:
         config.Settings = {"countdown_note": "", "start_time": "08:20", "end_time": "16:40", "percent_note": "",
                            "percent_display": 1, "wage_note": "", "wage_symbol": "", "wage": 0, "wage_display": 1}
